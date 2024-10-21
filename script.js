@@ -1,18 +1,47 @@
-// TODO: Implement the password generation logic based on user input
+document.getElementById("generateBtn").addEventListener("click", generatePassword);
+document.getElementById("copyBtn").addEventListener("click", copyToClipboard);
 
-const generatePassword = (length, options) => {
-    // Character sets for password generation
-    const uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    const lowercase = "abcdefghijklmnopqrstuvwxyz";
-    const numbers = "0123456789";
-    const specialChars = "!@#$%^&*()";
+function generatePassword() {
+    const length = parseInt(document.getElementById("length").value);
+    const includeUppercase = document.getElementById("includeUppercase").checked;
+    const includeLowercase = document.getElementById("includeLowercase").checked;
+    const includeNumbers = document.getElementById("includeNumbers").checked;
+    const includeSpecialChars = document.getElementById("includeSpecialChars").checked;
 
-    // TODO: Create a variable for the character set based on selected options
+    const charSets = {
+        uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+        lowercase: 'abcdefghijklmnopqrstuvwxyz',
+        numbers: '0123456789',
+        special: '!@#$%^&*()_+[]{}|;:,.<>?'
+    };
 
-    // TODO: Generate the password based on the selected criteria
-    return password;
-};
+    let validChars = '';
+    if (includeUppercase) validChars += charSets.uppercase;
+    if (includeLowercase) validChars += charSets.lowercase;
+    if (includeNumbers) validChars += charSets.numbers;
+    if (includeSpecialChars) validChars += charSets.special;
 
-// TODO: Add event listener to the button to call generatePassword and display the output
+    if (!validChars) {
+        alert('Please select at least one character type!');
+        return;
+    }
 
-// BONUS: Implement the copy to clipboard functionality
+    let password = '';
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * validChars.length);
+        password += validChars[randomIndex];
+    }
+
+    document.getElementById("password").textContent = password;
+}
+
+function copyToClipboard() {
+    const passwordText = document.getElementById("password").textContent;
+    if (passwordText) {
+        navigator.clipboard.writeText(passwordText)
+            .then(() => alert("Password copied to clipboard!"))
+            .catch(err => alert("Failed to copy password: " + err));
+    } else {
+        alert("No password to copy!");
+    }
+}
